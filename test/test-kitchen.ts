@@ -108,8 +108,8 @@ describe('🚰 kitchen sink', () => {
   it('should use as a non-locally installed module', async () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
-    //const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
-    const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts`;
+    const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
+    //const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts`;
     const tmpDir = tmp.dirSync({ keep, unsafeCleanup: true });
     const opts = { cwd: `${tmpDir.name}/kitchen` };
 
@@ -120,7 +120,9 @@ describe('🚰 kitchen sink', () => {
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
 
-    fs.accessSync(``${stagingPath}\\kitchen\\node_modules);
+    fs.accessSync(`${stagingPath}/`);
+    fs.accessSync(`${stagingPath}/kitchen/`);
+    fs.accessSync(`${stagingPath}/kitchen/node_modules/`);
 
 
     await simpleExecp(`${GTS} init -n`, opts);
