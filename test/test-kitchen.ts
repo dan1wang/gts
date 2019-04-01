@@ -16,8 +16,6 @@ const pkg = require('../../package.json');
 
 const simpleExecp = pify(cp.exec);
 const renamep = pify(fs.rename);
-// const unlinkp = pify(fs.unlink);
-
 const movep = pify(fs.move);
 const ncpp = pify(ncp.ncp);
 
@@ -56,8 +54,7 @@ const execp = (
   });
 };
 
-//const keep = !!process.env.GTS_KEEP_TEMPDIRS;
-const keep = true;
+const keep = !!process.env.GTS_KEEP_TEMPDIRS;
 const stagingDir = tmp.dirSync({ keep, unsafeCleanup: true });
 const stagingPath = stagingDir.name;
 const execOpts = {
@@ -66,17 +63,11 @@ const execOpts = {
 
 console.log(`${chalk.blue(`${__filename} staging area: ${stagingPath}`)}`);
 
-function listFiles(dir: string) {
-  console.log(`files of ${dir}:`);
-  fs.readdirSync(`${dir}/`).forEach(file => console.log(`- ${file}`));
-}
-
 describe('🚰 kitchen sink', () => {
   // Create a staging directory with temp fixtures used to test on a fresh application.
   before(async () => {
     await simpleExecp('npm pack');
     const tarball = `${pkg.name}-${pkg.version}.tgz`;
-    //await renamep(tarball, `${stagingPath}/gts.tgz`);
     await renamep(tarball, 'gts.tgz');
     await movep('gts.tgz', `${stagingPath}/gts.tgz`);
     await ncpp('test/fixtures', `${stagingPath}/`);
@@ -101,8 +92,6 @@ describe('🚰 kitchen sink', () => {
         `npx -p ${stagingPath}/gts.tgz --ignore-existing gts init -n`,
         execOpts
       );
-
-      listFiles(`${stagingPath}/kitchen`);
     }
 
     // Ensure config files got generated.
@@ -130,17 +119,8 @@ describe('🚰 kitchen sink', () => {
     // Test package.json expects a gts tarball from ../gts.tgz.
     await ncpp(`${stagingPath}/gts.tgz`, `${tmpDir.name}/gts.tgz`);
 
-    listFiles(`${stagingPath}/kitchen`);
-
-    // await simpleExecp(`${GTS_INSTALL}`);
-
-    listFiles(`${tmpDir.name}/kitchen`);
-
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
-    console.log(GTS);
-    fs.accessSync(`${stagingPath}/kitchen/node_modules/`);
-
     await simpleExecp(`${GTS} init -n`, opts);
 
     // The `extends` field must use the local gts path.
