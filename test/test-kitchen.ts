@@ -119,6 +119,10 @@ describe('🚰 kitchen sink', () => {
     await ncpp(`${stagingPath}/gts.tgz`, `${tmpDir.name}/gts.tgz`);
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
+
+    fs.accessSync(`${GTS}`);
+
+
     await simpleExecp(`${GTS} init -n`, opts);
 
     // The `extends` field must use the local gts path.
