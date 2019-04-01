@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import * as cp from 'child_process';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as ncp from 'ncp';
 import * as pify from 'pify';
 import * as tmp from 'tmp';
@@ -15,8 +15,9 @@ interface ExecResult {
 const pkg = require('../../package.json');
 
 const simpleExecp = pify(cp.exec);
-const renamep = pify(fs.rename);
-const unlinkp = pify(fs.unlink);
+// const renamep = pify(fs.rename);
+// const unlinkp = pify(fs.unlink);
+const movep = pify(fs.move);
 const ncpp = pify(ncp.ncp);
 
 // TODO: improve the typedefinitions in @types/node. Right now they specify
@@ -68,12 +69,15 @@ describe('🚰 kitchen sink', () => {
   before(async () => {
     await simpleExecp('npm pack');
     const tarball = `${pkg.name}-${pkg.version}.tgz`;
+    await movep(tarball, `${stagingPath}/gts.tgz`);
+    /*
     try {
       await renamep(tarball, `${stagingPath}/gts.tgz`);
     } catch (err) {
       await unlinkp(stagingPath);
       await renamep(tarball, `${stagingPath}/gts.tgz`);
     }
+    */
     await ncpp('test/fixtures', `${stagingPath}/`);
   });
 
