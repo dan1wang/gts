@@ -48,7 +48,7 @@ function makeFakeFsExistsSync(
 }
 describe('util', () => {
   it('get should parse the correct tsconfig file', async () => {
-    const FAKE_DIRECTORY = './some/fake/directory';
+    const FAKE_DIRECTORY = 'some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'] };
 
     function fakeReadFilep(
@@ -184,7 +184,6 @@ describe('util', () => {
   });
 
   const cmdExt = process.platform === 'win32' ? '.cmd' : '';
-
   it('getPkgManagerCommand returns npm by default', () => {
     assert.strictEqual(getPkgManagerCommand(), 'npm' + cmdExt);
     assert.strictEqual(getPkgManagerCommand(), getPkgManagerCommand(false));
