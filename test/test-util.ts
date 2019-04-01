@@ -48,7 +48,7 @@ function makeFakeFsExistsSync(
 }
 describe('util', () => {
   it('get should parse the correct tsconfig file', async () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    const FAKE_DIRECTORY = './some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'] };
 
     function fakeReadFilep(
@@ -67,7 +67,7 @@ describe('util', () => {
     console.log('...............');
     console.log(contents);
     console.log(FAKE_CONFIG1);
-    
+
     assert.deepStrictEqual(contents, FAKE_CONFIG1);
   });
 

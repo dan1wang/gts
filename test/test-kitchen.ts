@@ -114,10 +114,8 @@ describe('🚰 kitchen sink', () => {
 
     // Copy test files.
     await ncpp('test/fixtures', `${tmpDir.name}/`);
-
     // Test package.json expects a gts tarball from ../gts.tgz.
     await ncpp(`${stagingPath}/gts.tgz`, `${tmpDir.name}/gts.tgz`);
-
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
     await simpleExecp(`${GTS} init -n`, opts);
