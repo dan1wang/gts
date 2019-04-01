@@ -15,8 +15,9 @@ interface ExecResult {
 const pkg = require('../../package.json');
 
 const simpleExecp = pify(cp.exec);
-// const renamep = pify(fs.rename);
+const renamep = pify(fs.rename);
 // const unlinkp = pify(fs.unlink);
+
 const movep = pify(fs.move);
 const ncpp = pify(ncp.ncp);
 
@@ -70,7 +71,9 @@ describe('🚰 kitchen sink', () => {
   before(async () => {
     await simpleExecp('npm pack');
     const tarball = `${pkg.name}-${pkg.version}.tgz`;
-    await movep(tarball, `${stagingPath}/gts.tgz`);
+    //await renamep(tarball, `${stagingPath}/gts.tgz`);
+    await renamep(tarball, 'gts.tgz');
+    await movep('gts.tgz', `${stagingPath}/gts.tgz`);
     await ncpp('test/fixtures', `${stagingPath}/`);
   });
 
@@ -115,8 +118,26 @@ describe('🚰 kitchen sink', () => {
 
     // Copy test files.
     await ncpp('test/fixtures', `${tmpDir.name}/`);
+
+    fs.readdirSync('test/fixtures').forEach(file => {
+      console.log('from test/fixtures/' + file);
+    });
+
+    fs.readdirSync(`${tmpDir.name}/`).forEach(file => {
+      console.log(`to ${tmpDir.name}/${file}`);
+    });
+
     // Test package.json expects a gts tarball from ../gts.tgz.
     await ncpp(`${stagingPath}/gts.tgz`, `${tmpDir.name}/gts.tgz`);
+
+    fs.readdirSync(`${stagingPath}/`).forEach(file => {
+      console.log(`from ${stagingPath}/${file}`);
+    });
+
+    fs.readdirSync(`${tmpDir.name}/`).forEach(file => {
+      console.log(`${tmpDir.name}/${file}`);
+    });
+
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
 
@@ -145,7 +166,7 @@ describe('🚰 kitchen sink', () => {
       tmpDir.removeCallback();
     }
   });
-/*
+
   it('should terminate generated json files with newline', async () => {
     await simpleExecp('./node_modules/.bin/gts init -y', execOpts);
     assert.ok(
@@ -198,5 +219,4 @@ describe('🚰 kitchen sink', () => {
     await simpleExecp('npm run clean', execOpts);
     assert.throws(() => fs.accessSync(`${stagingPath}/kitchen/build`));
   });
-  */
 });
