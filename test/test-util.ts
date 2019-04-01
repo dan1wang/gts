@@ -21,7 +21,7 @@ import {
   ConfigFile,
   getTSConfig,
   isYarnUsed,
-  getPkgManagerName,
+  getPkgManagerCommand,
 } from '../src/util';
 
 /**
@@ -178,13 +178,13 @@ describe('util', () => {
     assert.strictEqual(isYarnUsed(existsSync), false);
   });
 
-  it('getPkgManagerName returns npm by default', () => {
-    assert.strictEqual(getPkgManagerName(), 'npm');
-    assert.strictEqual(getPkgManagerName(), getPkgManagerName(false));
+  it('getPkgManagerCommand returns npm by default', () => {
+    assert.strictEqual(getPkgManagerCommand(), 'npm');
+    assert.strictEqual(getPkgManagerCommand(), getPkgManagerCommand(false));
   });
 
-  it('getPkgManagerName returns yarn', () => {
-    assert.strictEqual(getPkgManagerName(true), 'yarn');
+  it('getPkgManagerCommand returns yarn', () => {
+    assert.strictEqual(getPkgManagerCommand(true), 'yarn');
   });
 
   // TODO: test errors in readFile, JSON.parse.
