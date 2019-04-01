@@ -66,6 +66,11 @@ const execOpts = {
 
 console.log(`${chalk.blue(`${__filename} staging area: ${stagingPath}`)}`);
 
+function listFiles(dir: string) {
+  console.log(`files of ${dir}:`);
+  fs.readdirSync(`${dir}/`).forEach(file => console.log(`- ${file}`));
+}
+
 describe('🚰 kitchen sink', () => {
   // Create a staging directory with temp fixtures used to test on a fresh application.
   before(async () => {
@@ -96,6 +101,8 @@ describe('🚰 kitchen sink', () => {
         `npx -p ${stagingPath}/gts.tgz --ignore-existing gts init -n`,
         execOpts
       );
+
+      listFiles(`${stagingPath}/kitchen`);
     }
 
     // Ensure config files got generated.
@@ -112,7 +119,7 @@ describe('🚰 kitchen sink', () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
     const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
-    const GTS_INSTALL = `${stagingPath}/kitchen/npm install`;
+    // const GTS_INSTALL = `${stagingPath}/kitchen/npm install`;
     //const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts`;
     const tmpDir = tmp.dirSync({ keep, unsafeCleanup: true });
     const opts = { cwd: `${tmpDir.name}/kitchen` };
@@ -120,26 +127,14 @@ describe('🚰 kitchen sink', () => {
     // Copy test files.
     await ncpp('test/fixtures', `${tmpDir.name}/`);
 
-    fs.readdirSync('test/fixtures/kitchen').forEach(file => {
-      console.log('from test/fixtures/kitchen/' + file);
-    });
-
-    fs.readdirSync(`${tmpDir.name}/kitchen`).forEach(file => {
-      console.log(`  to ${tmpDir.name}/${file}`);
-    });
-
     // Test package.json expects a gts tarball from ../gts.tgz.
     await ncpp(`${stagingPath}/gts.tgz`, `${tmpDir.name}/gts.tgz`);
 
-    fs.readdirSync(`${stagingPath}/kitchen`).forEach(file => {
-      console.log(`from ${stagingPath}/kitchen/${file}`);
-    });
+    listFiles(`${stagingPath}/kitchen`);
 
-    await simpleExecp(`${GTS_INSTALL}`);
+    // await simpleExecp(`${GTS_INSTALL}`);
 
-    fs.readdirSync(`${tmpDir.name}/kitchen`).forEach(file => {
-      console.log(`  to ${tmpDir.name}/kitchen/${file}`);
-    });
+    listFiles(`${tmpDir.name}/kitchen`);
 
     // It's important to use `-n` here because we don't want to overwrite
     // the version of gts installed, as it will trigger the npm install.
