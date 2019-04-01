@@ -178,13 +178,15 @@ describe('util', () => {
     assert.strictEqual(isYarnUsed(existsSync), false);
   });
 
+  const cmdExt = process.platform === 'win32' ? '.cmd' : '';
+
   it('getPkgManagerCommand returns npm by default', () => {
-    assert.strictEqual(getPkgManagerCommand(), 'npm');
+    assert.strictEqual(getPkgManagerCommand(), 'npm' + cmdExt);
     assert.strictEqual(getPkgManagerCommand(), getPkgManagerCommand(false));
   });
 
   it('getPkgManagerCommand returns yarn', () => {
-    assert.strictEqual(getPkgManagerCommand(true), 'yarn');
+    assert.strictEqual(getPkgManagerCommand(true), 'yarn' + cmdExt);
   });
 
   // TODO: test errors in readFile, JSON.parse.

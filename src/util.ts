@@ -139,7 +139,6 @@ export function isYarnUsed(existsSync = fs.existsSync): boolean {
 
 export function getPkgManagerCommand(isYarnUsed?: boolean): string {
   return (
-    (isYarnUsed ? 'yarn' : 'npm') +
-    (process.platform === 'win32' ? '.cmd' : '')
+    (isYarnUsed ? 'yarn' : 'npm') + (process.platform === 'win32' ? '.cmd' : '')
   );
 }
