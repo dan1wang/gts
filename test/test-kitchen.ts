@@ -55,7 +55,8 @@ const execp = (
   });
 };
 
-const keep = !!process.env.GTS_KEEP_TEMPDIRS;
+//const keep = !!process.env.GTS_KEEP_TEMPDIRS;
+const keep = true;
 const stagingDir = tmp.dirSync({ keep, unsafeCleanup: true });
 const stagingPath = stagingDir.name;
 const execOpts = {
@@ -70,14 +71,6 @@ describe('🚰 kitchen sink', () => {
     await simpleExecp('npm pack');
     const tarball = `${pkg.name}-${pkg.version}.tgz`;
     await movep(tarball, `${stagingPath}/gts.tgz`);
-    /*
-    try {
-      await renamep(tarball, `${stagingPath}/gts.tgz`);
-    } catch (err) {
-      await unlinkp(stagingPath);
-      await renamep(tarball, `${stagingPath}/gts.tgz`);
-    }
-    */
     await ncpp('test/fixtures', `${stagingPath}/`);
   });
 
@@ -115,8 +108,8 @@ describe('🚰 kitchen sink', () => {
   it('should use as a non-locally installed module', async () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
-    //const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
-    const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts`;
+    const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
+    //const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts`;
     const tmpDir = tmp.dirSync({ keep, unsafeCleanup: true });
     const opts = { cwd: `${tmpDir.name}/kitchen` };
 
