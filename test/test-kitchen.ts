@@ -170,11 +170,11 @@ describe('🚰 kitchen sink', () => {
   it('should fix', async () => {
     const preFix = fs
       .readFileSync(`${stagingPath}/kitchen/src/server.ts`, 'utf8')
-      .split('\n');
+      .split(/[\n\r]+/);
     await simpleExecp('npm run fix', execOpts);
     const postFix = fs
       .readFileSync(`${stagingPath}/kitchen/src/server.ts`, 'utf8')
-      .split('\n');
+      .split(/[\n\r]+/);
     assert.strictEqual(preFix[0].trim() + ';', postFix[0]); // fix should have added a semi-colon
   });
 

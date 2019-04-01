@@ -63,6 +63,11 @@ describe('util', () => {
       return Promise.resolve(JSON.stringify(FAKE_CONFIG1));
     }
     const contents = await getTSConfig(FAKE_DIRECTORY, fakeReadFilep);
+
+    console.log('...............');
+    console.log(contents);
+    console.log(FAKE_CONFIG1);
+    
     assert.deepStrictEqual(contents, FAKE_CONFIG1);
   });
 
