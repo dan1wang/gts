@@ -116,7 +116,7 @@ describe('🚰 kitchen sink', () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
     //const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
-    const GTS = `${stagingPath}\kitchen\node_modules\.bin\gts.cmd`;
+    const GTS = `${stagingPath}\\kitchen\\node_modules\\.bin\\gts.cmd`;
     const tmpDir = tmp.dirSync({ keep, unsafeCleanup: true });
     const opts = { cwd: `${tmpDir.name}/kitchen` };
 
