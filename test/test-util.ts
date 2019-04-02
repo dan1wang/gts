@@ -36,7 +36,7 @@ function createFakeReadFilep(myMap: Map<string, ConfigFile>) {
     if (configFile) {
       return Promise.resolve(JSON.stringify(configFile));
     } else {
-      return Promise.reject(`${configPath} Not Found`);
+      return Promise.reject(`${configPath} Not Found.`);
     }
   };
 }
@@ -55,6 +55,10 @@ describe('util', () => {
       configPath: string,
       encoding: string
     ): Promise<string> {
+      console.log('assert configPath: ' + configPath);
+      console.log('assert configPath: ' + path.join(FAKE_DIRECTORY, 'tsconfig.json') );
+      console.log('assert configPath: ' + path.join(configPath) );
+
       assert.strictEqual(
         configPath,
         path.join(FAKE_DIRECTORY, 'tsconfig.json')
