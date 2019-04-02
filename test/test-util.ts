@@ -36,7 +36,7 @@ function createFakeReadFilep(myMap: Map<string, ConfigFile>) {
     if (configFile) {
       return Promise.resolve(JSON.stringify(configFile));
     } else {
-      return Promise.reject(`${configPath} Not Found.`);
+      return Promise.reject(`${configPath} Not Found`);
     }
   };
 }
@@ -86,7 +86,6 @@ describe('util', () => {
   });
 
   it('should follow dependency chain caused by extends files', async () => {
-    // const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = {
       compilerOptions: { a: 'n' },
       files: ['b'],
@@ -180,14 +179,15 @@ describe('util', () => {
     assert.strictEqual(isYarnUsed(existsSync), false);
   });
 
-  const cmdExt = process.platform === 'win32' ? '.cmd' : '';
+  const npmCmd = process.platform !== 'win32' ? 'npm' : 'npm.cmd';
+  const yarnCmd = process.platform !== 'win32' ? 'yarn' : 'yarn.cmd';
   it('getPkgManagerCommand returns npm by default', () => {
-    assert.strictEqual(getPkgManagerCommand(), 'npm' + cmdExt);
+    assert.strictEqual(getPkgManagerCommand(), npmCmd);
     assert.strictEqual(getPkgManagerCommand(), getPkgManagerCommand(false));
   });
 
   it('getPkgManagerCommand returns yarn', () => {
-    assert.strictEqual(getPkgManagerCommand(true), 'yarn' + cmdExt);
+    assert.strictEqual(getPkgManagerCommand(true), yarnCmd);
   });
 
   // TODO: test errors in readFile, JSON.parse.
