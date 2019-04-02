@@ -62,11 +62,11 @@ describe('util', () => {
     ): Promise<string> {
 
       console.log('fakeReadFilep()...');
-      console.log('...configPath: ' + path.join(configPath));
+      console.log('...configPath: ' + configPath);
       console.log('...configPath: ' + path.join(FAKE_DIRECTORY, 'tsconfig.json'));
 
       assert.strictEqual(
-        path.join(configPath),
+        configPath,
         path.join(FAKE_DIRECTORY, 'tsconfig.json')
       );
 
