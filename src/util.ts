@@ -68,7 +68,11 @@ async function getBase(
 ): Promise<ConfigFile> {
   customReadFilep = customReadFilep || readFilep;
 
+  console.log('getBase()...');
+
   filePath = path.resolve(currentDir, filePath);
+
+  console.log('filePath: ' + filePath);
 
   // An error is thrown if there is a circular reference as specified by the
   // TypeScript doc
@@ -77,8 +81,13 @@ async function getBase(
   }
   readFiles.add(filePath);
   try {
+
+    console.log('reading file...');
+
     const json = await customReadFilep(filePath, 'utf8');
     let contents = JSON.parse(json);
+
+    console.log('json content: ' + contents);
 
     if (contents.extends) {
       const nextFile = await getBase(
