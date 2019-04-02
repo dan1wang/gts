@@ -104,7 +104,6 @@ describe('🚰 kitchen sink', () => {
     assert.strictEqual(dirContents.indexOf('build'), -1);
   });
 
-
   it('should use as a non-locally installed module', async () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
