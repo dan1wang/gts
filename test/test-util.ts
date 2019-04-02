@@ -51,9 +51,17 @@ function makeFakeFsExistsSync(
 ): (path: PathLike) => boolean {
   return (path: PathLike) => expected.some(item => item === path);
 }
+
+const FAKE_DIRECTORY = '/some/fake/directory';
+const PATH_TO_TSCONFIG = path.resolve(FAKE_DIRECTORY, 'tsconfig.json');
+const PATH_TO_CONFIG2 = path.resolve(FAKE_DIRECTORY, 'FAKE_CONFIG2');
+const PATH_TO_CONFIG3 = path.resolve(FAKE_DIRECTORY, 'FAKE_CONFIG3');
+console.log(PATH_TO_TSCONFIG);
+console.log(PATH_TO_CONFIG2);
+
 describe('util', () => {
   it('get should parse the correct tsconfig file', async () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    //const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'] };
 
     function fakeReadFilep(
@@ -63,11 +71,12 @@ describe('util', () => {
 
       console.log('fakeReadFilep()...');
       console.log('...configPath: ' + configPath);
-      console.log('...configPath: ' + path.join(FAKE_DIRECTORY, 'tsconfig.json'));
+      console.log('...configPath: ' + PATH_TO_TSCONFIG);
 
       assert.strictEqual(
         configPath,
-        path.join(FAKE_DIRECTORY, 'tsconfig.json')
+        // path.join(FAKE_DIRECTORY, 'tsconfig.json')
+        PATH_TO_TSCONFIG
       );
 
       console.log('fakeReadFilep first assert passed.');
@@ -82,14 +91,18 @@ describe('util', () => {
   });
 
   it('should throw an error if it finds a circular reference', () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    //const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'], extends: 'FAKE_CONFIG2' };
     const FAKE_CONFIG2 = { extends: 'FAKE_CONFIG3' };
     const FAKE_CONFIG3 = { extends: 'tsconfig.json' };
     const myMap = new Map();
-    myMap.set('/some/fake/directory/tsconfig.json', FAKE_CONFIG1);
-    myMap.set('/some/fake/directory/FAKE_CONFIG2', FAKE_CONFIG2);
-    myMap.set('/some/fake/directory/FAKE_CONFIG3', FAKE_CONFIG3);
+    //myMap.set('/some/fake/directory/tsconfig.json', FAKE_CONFIG1);
+    //myMap.set('/some/fake/directory/FAKE_CONFIG2', FAKE_CONFIG2);
+    //myMap.set('/some/fake/directory/FAKE_CONFIG3', FAKE_CONFIG3);
+
+    myMap.set(PATH_TO_TSCONFIG, FAKE_CONFIG1);
+    myMap.set(PATH_TO_CONFIG2, FAKE_CONFIG2);
+    myMap.set(PATH_TO_CONFIG3, FAKE_CONFIG3);
 
     return assert.rejects(
       () => getTSConfig(FAKE_DIRECTORY, createFakeReadFilep(myMap)),
@@ -99,7 +112,7 @@ describe('util', () => {
   });
 
   it('should follow dependency chain caused by extends files', async () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    // const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = {
       compilerOptions: { a: 'n' },
       files: ['b'],
@@ -114,14 +127,15 @@ describe('util', () => {
       exclude: ['doesnt/look/like/anything/to/me'],
     };
 
-    console.log(path.join('/some/fake/directory/tsconfig.json') + ' = ' + FAKE_CONFIG1);
-    console.log(path.join('/some/fake/directory/FAKE_CONFIG2') + ' = ' + FAKE_CONFIG2);
-    console.log(path.join('/some/fake/directory/FAKE_CONFIG3') + ' = ' + FAKE_CONFIG3);
-
     const myMap = new Map();
+    myMap.set(PATH_TO_TSCONFIG, FAKE_CONFIG1);
+    myMap.set(PATH_TO_CONFIG2, FAKE_CONFIG2);
+    myMap.set(PATH_TO_CONFIG3, FAKE_CONFIG3);
+    /*
     myMap.set(path.join('/some/fake/directory/tsconfig.json'), FAKE_CONFIG1);
     myMap.set(path.join('/some/fake/directory/FAKE_CONFIG2'), FAKE_CONFIG2);
     myMap.set(path.join('/some/fake/directory/FAKE_CONFIG3'), FAKE_CONFIG3);
+    */
 
     const contents = await getTSConfig(
       FAKE_DIRECTORY,
@@ -131,15 +145,20 @@ describe('util', () => {
   });
 
   it('when a file contains an extends field, the base file is loaded first then overridden by the inherited files', async () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    //const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'], extends: 'FAKE_CONFIG2' };
     const FAKE_CONFIG2 = { files: ['c'], extends: 'FAKE_CONFIG3' };
     const FAKE_CONFIG3 = { files: ['d'] };
     const combinedConfig = { compilerOptions: {}, files: ['b'] };
     const myMap = new Map();
+    myMap.set(PATH_TO_TSCONFIG, FAKE_CONFIG1);
+    myMap.set(PATH_TO_CONFIG2, FAKE_CONFIG2);
+    myMap.set(PATH_TO_CONFIG3, FAKE_CONFIG3);
+    /*
     myMap.set('/some/fake/directory/tsconfig.json', FAKE_CONFIG1);
     myMap.set('/some/fake/directory/FAKE_CONFIG2', FAKE_CONFIG2);
     myMap.set('/some/fake/directory/FAKE_CONFIG3', FAKE_CONFIG3);
+    */
 
     const contents = await getTSConfig(
       FAKE_DIRECTORY,
@@ -149,7 +168,7 @@ describe('util', () => {
   });
 
   it('when reading a file, all filepaths should be relative to the config file currently being read', async () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    //const FAKE_DIRECTORY = '/some/fake/directory';
     const FAKE_CONFIG1 = { files: ['b'], extends: './foo/FAKE_CONFIG2' };
     const FAKE_CONFIG2 = { include: ['c'], extends: './bar/FAKE_CONFIG3' };
     const FAKE_CONFIG3 = { exclude: ['d'] };
@@ -160,9 +179,16 @@ describe('util', () => {
       include: ['c'],
     };
     const myMap = new Map();
+    myMap.set(PATH_TO_TSCONFIG, FAKE_CONFIG1);
+    myMap.set(path.resolve(FAKE_DIRECTORY, './foo/FAKE_CONFIG2'), FAKE_CONFIG2);
+    myMap.set(path.resolve(FAKE_DIRECTORY, './foo/bar/FAKE_CONFIG3'), FAKE_CONFIG3);
+    //console.log(path.resolve(FAKE_DIRECTORY, './foo/FAKE_CONFIG2'));
+    //console.log(path.resolve(FAKE_DIRECTORY, './foo/bar/FAKE_CONFIG3'));
+    /*
     myMap.set('/some/fake/directory/tsconfig.json', FAKE_CONFIG1);
     myMap.set('/some/fake/directory/foo/FAKE_CONFIG2', FAKE_CONFIG2);
     myMap.set('/some/fake/directory/foo/bar/FAKE_CONFIG3', FAKE_CONFIG3);
+    */
 
     const contents = await getTSConfig(
       FAKE_DIRECTORY,
@@ -172,7 +198,7 @@ describe('util', () => {
   });
 
   it('function throws an error when reading a file that does not exist', () => {
-    const FAKE_DIRECTORY = '/some/fake/directory';
+    //const FAKE_DIRECTORY = '/some/fake/directory';
     const myMap = new Map();
 
     return assert.rejects(
