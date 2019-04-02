@@ -31,8 +31,10 @@ import {
  * The returned function has the same interface as fs.readFile
  */
 function createFakeReadFilep(myMap: Map<string, ConfigFile>) {
+  console.log('createFakeReadFilep()');
   return (configPath: string) => {
     const configFile = myMap.get(configPath);
+    console.log(configFile);
     if (configFile) {
       return Promise.resolve(JSON.stringify(configFile));
     } else {
@@ -55,22 +57,14 @@ describe('util', () => {
       configPath: string,
       encoding: string
     ): Promise<string> {
-      console.log('assert configPath: ' + configPath);
-      console.log('assert configPath: ' + path.join(FAKE_DIRECTORY, 'tsconfig.json') );
-      console.log('assert configPath: ' + path.join(configPath) );
-
       assert.strictEqual(
-        configPath,
+        path.join(configPath),
         path.join(FAKE_DIRECTORY, 'tsconfig.json')
       );
       assert.strictEqual(encoding, 'utf8');
       return Promise.resolve(JSON.stringify(FAKE_CONFIG1));
     }
     const contents = await getTSConfig(FAKE_DIRECTORY, fakeReadFilep);
-
-    console.log('...............');
-    console.log(contents);
-    console.log(FAKE_CONFIG1);
 
     assert.deepStrictEqual(contents, FAKE_CONFIG1);
   });

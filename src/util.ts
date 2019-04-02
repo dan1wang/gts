@@ -68,11 +68,7 @@ async function getBase(
 ): Promise<ConfigFile> {
   customReadFilep = customReadFilep || readFilep;
 
-  console.log('getBase()...');
-
   filePath = path.resolve(currentDir, filePath);
-
-  console.log('filePath: ' + filePath);
 
   // An error is thrown if there is a circular reference as specified by the
   // TypeScript doc
