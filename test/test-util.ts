@@ -34,7 +34,10 @@ function createFakeReadFilep(myMap: Map<string, ConfigFile>) {
   console.log('createFakeReadFilep()');
   return (configPath: string) => {
     const configFile = myMap.get(configPath);
-    console.log(configFile);
+    console.log('...configFile: ' + configFile);
+    console.log('...configPath: ' + configPath);
+    console.log('...myMap: ' + JSON.stringify(myMap));
+
     if (configFile) {
       return Promise.resolve(JSON.stringify(configFile));
     } else {
@@ -58,6 +61,7 @@ describe('util', () => {
       encoding: string
     ): Promise<string> {
 
+      console.log('fakeReadFilep()...');
       console.log(path.join(configPath));
 
       assert.strictEqual(

@@ -70,6 +70,10 @@ async function getBase(
 
   filePath = path.resolve(currentDir, filePath);
 
+  console.log('getBase()');
+  console.log('...filePath: ' + filePath);
+
+
   // An error is thrown if there is a circular reference as specified by the
   // TypeScript doc
   if (readFiles.has(filePath)) {
@@ -78,7 +82,10 @@ async function getBase(
   readFiles.add(filePath);
   try {
     const json = await customReadFilep(filePath, 'utf8');
+
+    console.log('...will try JSON.parse() of ' + json);
     let contents = JSON.parse(json);
+    console.log('...success!');
 
     if (contents.extends) {
       const nextFile = await getBase(
