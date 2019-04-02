@@ -104,11 +104,11 @@ describe('🚰 kitchen sink', () => {
     assert.strictEqual(dirContents.indexOf('build'), -1);
   });
 
-  const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
 
   it('should use as a non-locally installed module', async () => {
     // Use from a directory different from where we have locally installed. This
     // simulates use as a globally installed module.
+    const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
     const tmpDir = tmp.dirSync({ keep, unsafeCleanup: true });
     const opts = { cwd: `${tmpDir.name}/kitchen` };
 
@@ -140,7 +140,7 @@ describe('🚰 kitchen sink', () => {
   });
 
   it('should terminate generated json files with newline', async () => {
-    //await simpleExecp('./node_modules/.bin/gts init -y', execOpts);
+    const GTS = `${stagingPath}/kitchen/node_modules/.bin/gts`;
     await simpleExecp(`${GTS} init -y`, execOpts);
     assert.ok(
       fs
