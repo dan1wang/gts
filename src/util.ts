@@ -85,9 +85,12 @@ async function getBase(
     console.log('reading file...');
 
     const json = await customReadFilep(filePath, 'utf8');
+
+    console.log('json file content: ' + json);
+
     let contents = JSON.parse(json);
 
-    console.log('json content: ' + contents);
+    console.log('parsed content: ' + contents);
 
     if (contents.extends) {
       const nextFile = await getBase(
