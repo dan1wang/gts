@@ -57,14 +57,21 @@ describe('util', () => {
       configPath: string,
       encoding: string
     ): Promise<string> {
+
+      console.log(path.join(configPath));
+
       assert.strictEqual(
         path.join(configPath),
         path.join(FAKE_DIRECTORY, 'tsconfig.json')
       );
+
+      console.log('fakeReadFilep first assert passed.');
       assert.strictEqual(encoding, 'utf8');
+      console.log('fakeReadFilep 2nd assert passed.');
       return Promise.resolve(JSON.stringify(FAKE_CONFIG1));
     }
     const contents = await getTSConfig(FAKE_DIRECTORY, fakeReadFilep);
+    console.log('fakeReadFilep: contents = ' + JSON.stringify(contents));
 
     assert.deepStrictEqual(contents, FAKE_CONFIG1);
   });
@@ -103,9 +110,9 @@ describe('util', () => {
     };
 
     const myMap = new Map();
-    myMap.set('/some/fake/directory/tsconfig.json', FAKE_CONFIG1);
-    myMap.set('/some/fake/directory/FAKE_CONFIG2', FAKE_CONFIG2);
-    myMap.set('/some/fake/directory/FAKE_CONFIG3', FAKE_CONFIG3);
+    myMap.set(path.join('/some/fake/directory/tsconfig.json'), FAKE_CONFIG1);
+    myMap.set(path.join('/some/fake/directory/FAKE_CONFIG2'), FAKE_CONFIG2);
+    myMap.set(path.join('/some/fake/directory/FAKE_CONFIG3'), FAKE_CONFIG3);
 
     const contents = await getTSConfig(
       FAKE_DIRECTORY,
