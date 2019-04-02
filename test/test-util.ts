@@ -62,7 +62,8 @@ describe('util', () => {
     ): Promise<string> {
 
       console.log('fakeReadFilep()...');
-      console.log(path.join(configPath));
+      console.log('...configPath: ' + path.join(configPath));
+      console.log('...configPath: ' + path.join(FAKE_DIRECTORY, 'tsconfig.json'));
 
       assert.strictEqual(
         path.join(configPath),
@@ -112,6 +113,10 @@ describe('util', () => {
       include: ['/stuff/*'],
       exclude: ['doesnt/look/like/anything/to/me'],
     };
+
+    console.log(path.join('/some/fake/directory/tsconfig.json') + ' = ' + FAKE_CONFIG1);
+    console.log(path.join('/some/fake/directory/FAKE_CONFIG2') + ' = ' + FAKE_CONFIG2);
+    console.log(path.join('/some/fake/directory/FAKE_CONFIG3') + ' = ' + FAKE_CONFIG3);
 
     const myMap = new Map();
     myMap.set(path.join('/some/fake/directory/tsconfig.json'), FAKE_CONFIG1);
